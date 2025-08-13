@@ -38,7 +38,7 @@
 2. Clonar este repositorio:
 
 ```
-git clone git@github.com:identi-digital/cartera_identi_open_source.git
+git clone https://github.com/Identi-OpenSource/cartera_identi.git
 ```
 
 3. Instalación de los paquetes de npm:
