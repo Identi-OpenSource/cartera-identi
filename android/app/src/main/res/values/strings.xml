@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Identi Wallet</string>
+    <!-- <string name="mapbox_access_token">@string/MAPBOX_ACCESS_TOKEN</string> -->
+</resources>
