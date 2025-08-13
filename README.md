@@ -5,20 +5,20 @@
 </p>
 
 <p align="center">
-  Cartera Identi es un ejercicio técnico y de prueba <code>(Proof of Concept)</code> centrado en la integración de Identificadores Descentralizados (DID) en un caso de uso hipotético de solicitudes de crédito. El objetivo principal es explorar y documentar cómo la tecnología DID, junto con el ecosistema de IDENTI, puede mejorar la seguridad y la gestión de la identidad en procesos que tradicionalmente dependen de credenciales centralizadas.
+  Cartera Identi es una billetera digital universal e interoperable para la gestión de Identificadores Descentralizados (DID) en un contexto de solicitudes de servicios. Basada en tecnología blockchain y estándares abiertos de identidad descentralizada, permite la autogestión de datos e interacciones seguras y eficientes entre usuarios y entidades proveedoras de servicios a través de infraestructura digital confiable.
 </p>
 
-## Funcionalidades Principales
+## Funcionalidades principales
 
-<p >Las funcionalidades de la aplicación simulan un flujo de trabajo típico de gestión de identidad y crédito, utilizando DID.</p>
+<p>Las funcionalidades de la aplicación simulan un flujo de trabajo típico de gestión de identidad y crédito, utilizando DID.</p>
 
 - **Credencial de Identidad**: La primera vez que el usuario accede a la app, se crea una credencial de identidad digital. Esta credencial, que no está vinculada a una entidad central, es el pilar de la identidad del usuario y es necesaria para acceder a los demás servicios de la cartera.
 
-- **Solicitud de Crédito**: Se simula una solicitud de crédito a un "banco" hipotético. La aplicación no solo envía los datos necesarios, sino que también gestiona las credenciales verificables asociadas, demostrando cómo se podría verificar la identidad del usuario de forma segura.
+- **Solicitud de Crédito**: El usuario, con credencial de identidad aprobada, puede solicitar créditos a un “entidad financiera” simulada. La aplicación no solo envía los datos necesarios, sino que también gestiona las credenciales verificables asociadas, demostrando a la entidad financiera cómo se realizó la verificación de la identidad del usuario de forma segura.
 
 - **Visualizar Solicitud**: El usuario puede revisar el estado de sus solicitudes simuladas, lo que permite observar cómo se gestionaría la comunicación asincrónica de verificaciones o aprobaciones en un sistema real basado en DID.
 
-- **Visualizar Credenciales**: La aplicación actúa como una "cartera" de credenciales, permitiendo al usuario ver todas las credenciales que ha emitido y recibido.
+- **Visualizar Credenciales**: La aplicación actúa como una “cartera” de credenciales, permitiendo al usuario ver todas las credenciales que ha emitido y recibido.
 
 ## Requerimientos
 
@@ -53,7 +53,7 @@ npm install --legacy-peer-deps
 npm start -- --reset-cache
 ```
 
-## ⚠️ Posibles Problemas
+## ⚠️ Posibles problemas
 
 Esta aplicación integra librerías criptográficas avanzadas y funcionalidades de Node.js, lo que puede generar algunos desafíos de compatibilidad durante la instalación. Los errores suelen depender del entorno de trabajo y la versión de Node.js que estés utilizando.
 
@@ -67,7 +67,7 @@ Para solucionar estos problemas, te recomendamos lo siguiente:
 
 Estamos encantados de recibir contribuciones de la comunidad para mejorar **Billetera Identi**. Si estás interesado en contribuir, aquí te mostramos algunas maneras en las que puedes hacerlo:
 
-- **Sugerir una característica**: Si tienes una idea para una nueva funcionalidad que podría mejorar la aplicación, abre un issue en el repositorio para discutir tu sugerencia. Nos encantaría escuchar tus ideas y colaborar en su implementación.
+- **Sugerir una característica**: Si tienes una idea para una nueva funcionalidad que podría mejorar la aplicación, abre un issue en el repositorio para discutir tu sugerencia.
 
       Para contribuir, sigue estos pasos:
 
@@ -86,7 +86,7 @@ Estamos encantados de recibir contribuciones de la comunidad para mejorar **Bill
 
 - **Respondiendo a los problemas**: Ayuda a la comunidad respondiendo a los problemas abiertos en el repositorio. Si tienes experiencia en la solución de problemas específicos, tus sugerencias y soluciones serán muy apreciadas.
 
-¡Gracias por tu interés en contribuir a **Billetera Identi**! Tu ayuda es invaluable para mejorar la herramienta y apoyar a los productores de cacao en Colombia y Perú.
+¡Gracias por tu interés en contribuir a **Billetera Identi**! Tu ayuda es invaluable para mejorar la herramienta.
 
 ## Licencia
 

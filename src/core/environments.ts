@@ -3,7 +3,7 @@ import Config from 'react-native-config'
 export const MEDIATOR_DID_LAC = Config?.LACCHAIN_MEDIATOR || ''
 export const DID_PROVIDER_LAC = Config?.LACCHAIN_PROVIDER || ''
 export const DID_LAC_CREDENTIAL_REGISTER_ADDRESS =
-  Config?.LACCHAIN_CREDENTIAL_REGISTRY_ADDRESS || ''
+  Config?.LACCHAIN_DID_REGISTRY_ADDRESS || ''
 export const DID_RESOLVER_LAC_NAME = Config?.LACCHAIN_RESOLVER || ''
 export const DID_LACCHAIN_NODE_ADDRESS = Config?.LACCHAIN_NODE_ADDRESS || ''
 export const DID_LACCHAIN_RPC_URL = Config?.LACCHAIN_RPC_URL || ''
