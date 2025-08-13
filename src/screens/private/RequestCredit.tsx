@@ -111,6 +111,7 @@ export const RequestCredit = () => {
   const submit = async () => {
     if (!form.entidad || !form.monto || !form.plazo || !form.motivo) {
       Alert.alert('Error de validación', 'Por favor, rellena todos los campos')
+      return
     }
     try {
       const verifiablePresentation = await createPV(agent, myData.did)
