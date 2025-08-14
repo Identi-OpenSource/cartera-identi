@@ -23,8 +23,7 @@ export const BtnPrimary = (props: PropsBtnPrimary) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
-    height: 60,
-    width: '100%',
+    height: 48,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: colors.background,
   },

@@ -28,27 +28,7 @@ export const Router = () => {
 }
 
 const PrivateStack = () => {
-  const {myData} = useSecureStorage()
-  const agent = useAgent()
   const Tabs = createBottomTabNavigator()
-  const getMessages = async () => {
-    try {
-      await receivedMessages(agent, myData?.did, MEDIATOR_DID_LAC)
-    } catch (error) {
-      console.log('Error en getMessages:', error)
-    }
-  }
-
-  useEffect(() => {
-    getMessages()
-    const messages = setInterval(() => {
-      getMessages()
-    }, 60000)
-
-    return () => {
-      clearInterval(messages)
-    }
-  }, [])
 
   return (
     <Tabs.Navigator

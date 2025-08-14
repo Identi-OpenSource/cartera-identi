@@ -78,6 +78,26 @@ export const HomePrivate = () => {
     }
   }
 
+  const getMessages = async () => {
+    try {
+      setLoading({
+        loading: true,
+        error: null,
+        msg: 'Sincronizando, por favor espere...',
+      })
+      await receivedMessages(agent, myData?.did, MEDIATOR_DID_LAC)
+    } catch (error) {
+      console.log('Error en getMessages:', error)
+    } finally {
+      init()
+      setLoading({
+        loading: false,
+        error: null,
+        msg: '',
+      })
+    }
+  }
+
   const init = async () => {
     await emitAllCV()
     const solicitudes = JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string)
@@ -88,6 +108,15 @@ export const HomePrivate = () => {
       )
     })
     setListSolicitudes(solicitudes || [])
+  }
+
+  const status: any = (s: any) => {
+    if (s === 1) {
+      return ['Aceptado', 'circle-check', colors.success]
+    } else if (s === 2) {
+      return ['Rechazado', 'rectangle-xmark', colors.deleted]
+    }
+    return ['Pendiente', 'hourglass-start', colors.secondary]
   }
 
   useEffect(() => {
@@ -127,11 +156,20 @@ export const HomePrivate = () => {
           }>{`${myData?.country} | DNI: ${myData?.dni} | Tel: ${myData?.phone}`}</Text>
       </View>
       <View style={styles.body}>
-        <BtnPrimary
-          disabled={loading?.loading}
-          title="Solicitar crédito"
-          onPress={() => navigation.navigate('RequestCredit' as never)}
-        />
+        <View style={styles.bodyBtn}>
+          <BtnPrimary
+            disabled={loading?.loading}
+            title="Actualizar"
+            onPress={() => getMessages()}
+          />
+        </View>
+        <View style={styles.bodyBtn}>
+          <BtnPrimary
+            disabled={loading?.loading}
+            title="Solicitar crédito"
+            onPress={() => navigation.navigate('RequestCredit' as never)}
+          />
+        </View>
       </View>
       <ScrollView>
         {listSolicitudes?.length > 0 && (
@@ -156,6 +194,9 @@ export const HomePrivate = () => {
                       )}
                     </Text>
                     <Text style={styles.dataValue}>{data?.entidad}</Text>
+                    <Text style={styles.dataValue}>
+                      {status(data?.status)[0]}
+                    </Text>
                   </View>
                 </TouchableHighlight>
               )
@@ -168,6 +209,9 @@ export const HomePrivate = () => {
 }
 
 const styles = StyleSheet.create({
+  bodyBtn: {
+    width: '48%',
+  },
   loadingText: {
     paddingLeft: 10,
     fontSize: 14,
@@ -184,6 +228,9 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   bodyList: {
     paddingHorizontal: 20,

@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
     color: colors.text,
     backgroundColor: colors.complementary,
   },

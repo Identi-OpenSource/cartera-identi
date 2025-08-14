@@ -11,7 +11,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import {useSecureStorage} from '../../context/SecureStorageContext'
 import {formatDid} from '../../utils/format'
-import {useNavigation} from '@react-navigation/native'
+import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useAgent} from '../../context/AgentContext'
 import {TYPE_CREDENTIAL} from '../../utils/functionCV'
 
@@ -31,6 +31,7 @@ export const MyCV = () => {
   const [credencialesHistorial, setCredencialesHistorial] = useState<any[]>([])
   const navigation = useNavigation<any>()
   const agent = useAgent()
+  const isFocused = useIsFocused()
 
   const getCredential = async () => {
     let vcs = await agent.dataStoreORMGetVerifiableCredentials({
@@ -101,7 +102,7 @@ export const MyCV = () => {
 
   useEffect(() => {
     getCredential()
-  }, [])
+  }, [isFocused])
 
   return (
     <View style={globalStyles.container}>
