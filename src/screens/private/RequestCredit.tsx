@@ -43,17 +43,16 @@ const initValue: Form = {
 
 const bancos = {
   colombia: [
-    {label: 'Bancolombia', value: 'Bancolombia'},
-    {label: 'Banco de Bogotá', value: 'Banco de Bogotá'},
-    {label: 'BBVA Colombia', value: 'BBVA Colombia'},
+    {label: 'Banco Agrario Digital', value: 'Banco Agrario Digital'},
+    {label: 'Cooperativa CrediPlus', value: 'Cooperativa CrediPlus'},
   ],
   peru: [
+    {label: 'Agrobanco', value: 'Agrobanco'},
+    {label: 'Agrayu', value: 'Agrayu'},
     {
-      label: 'Banco de Crédito del Perú (BCP)',
-      value: 'Banco de Crédito del Perú (BCP)',
+      label: 'COOPAC Norandino',
+      value: 'COOPAC Norandino',
     },
-    {label: 'BBVA Continental', value: 'BBVA Continental'},
-    {label: 'Interbank', value: 'Interbank'},
   ],
 } as {[key: string]: {label: string; value: string}[]}
 
@@ -64,15 +63,26 @@ const plazosOptions = [
   {label: '12 meses', value: '12 meses'},
 ]
 
-const montoOptions = [
-  {label: '1000 pesos', value: '1000 pesos'},
-  {label: '5000 pesos', value: '5000 pesos'},
-  {label: '10000 pesos', value: '10000 pesos'},
-  {label: '15000 pesos', value: '15000 pesos'},
-  {label: '20000 pesos', value: '20000 pesos'},
-  {label: '25000 pesos', value: '25000 pesos'},
-  {label: '30000 pesos', value: '30000 pesos'},
-]
+const montoOptions = {
+  colombia: [
+    {label: '1000 pesos', value: '1000 pesos'},
+    {label: '5000 pesos', value: '5000 pesos'},
+    {label: '10000 pesos', value: '10000 pesos'},
+    {label: '15000 pesos', value: '15000 pesos'},
+    {label: '20000 pesos', value: '20000 pesos'},
+    {label: '25000 pesos', value: '25000 pesos'},
+    {label: '30000 pesos', value: '30000 pesos'},
+  ],
+  peru: [
+    {label: '1000 soles', value: '1000 soles'},
+    {label: '5000 soles', value: '5000 soles'},
+    {label: '10000 soles', value: '10000 soles'},
+    {label: '15000 soles', value: '15000 soles'},
+    {label: '20000 soles', value: '20000 soles'},
+    {label: '25000 soles', value: '25000 soles'},
+    {label: '30000 soles', value: '30000 soles'},
+  ],
+}
 
 const motivoOptions = [
   {label: 'Capital de trabajo', value: 'Capital de trabajo'},
@@ -99,6 +109,16 @@ export const RequestCredit = () => {
       return bancos.colombia
     } else if (dataUser.country === 'Perú') {
       return bancos.peru
+    } else {
+      return []
+    }
+  }
+
+  const creditOptions = () => {
+    if (myData.country === 'Colombia') {
+      return montoOptions.colombia
+    } else if (dataUser.country === 'Perú') {
+      return montoOptions.peru
     } else {
       return []
     }
@@ -207,7 +227,7 @@ export const RequestCredit = () => {
             name="monto"
             label="¿Cuánto?"
             value={form.monto}
-            options={montoOptions}
+            options={creditOptions()}
             onChange={handleChange}
           />
           <InpSelect
