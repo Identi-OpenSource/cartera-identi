@@ -25,6 +25,7 @@ import {
 } from '../../core/environments'
 import {useNavigation} from '@react-navigation/native'
 import {createPV, sendMessage} from '../../core/didcomm'
+import useNetInfo from '../../hooks/useNetInfo'
 
 const logo = require('../../assets/imgs/logo_identi.png')
 
@@ -103,6 +104,7 @@ export const RequestCredit = () => {
   const agent = useAgent()
   const dataUser = JSON.parse(getItem(KEYS_MMKV.MY_DATA_USER) as string)
   const navigation = useNavigation<any>()
+  const connectionStatus = useNetInfo()
 
   const bankOptions = () => {
     if (myData.country === 'Colombia') {
@@ -158,12 +160,28 @@ export const RequestCredit = () => {
         },
       }
 
+      if (!connectionStatus) {
+        Alert.alert(
+          'Error de conexión',
+          'Tu solicitud se ha puesto en espera debido a la falta de conexión a internet. Para continuar, por favor, conéctate a una red y presiona el botón Actualizar en la pantalla principal.',
+        )
+        const listSolicitudes =
+          JSON.parse(getItem(KEYS_MMKV.listSolicitudesPending) as string) || []
+        listSolicitudes.push(body)
+        setItem(
+          KEYS_MMKV.listSolicitudesPending,
+          JSON.stringify(listSolicitudes),
+        )
+
+        navigation.navigate('HomePrivate')
+        return
+      }
+
       setLoading({
         loading: true,
         error: null,
         msg: 'Enviando solicitud',
       })
-
       await sendMessage(agent, myData.did, RECIPIENT_DID_URL, body)
         .then(() => {
           const listSolicitudes =

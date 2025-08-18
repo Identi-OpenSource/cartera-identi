@@ -7,6 +7,7 @@ export const KEYS_MMKV = {
   MY_DATA_USER: 'myDataUser',
   listVC: 'listVC',
   listSolicitudes: 'listSolicitudes',
+  listSolicitudesPending: 'listSolicitudesPending',
   sendCvIdentity: 'sendCvIdentity',
 }
 

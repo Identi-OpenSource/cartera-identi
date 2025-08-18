@@ -23,6 +23,7 @@ import {
 } from '../../core/didcomm'
 import {MEDIATOR_DID_LAC} from '../../core/environments'
 import {useAgent} from '../../context/AgentContext'
+import useNetInfo from '../../hooks/useNetInfo'
 
 interface Form {
   name: string
@@ -49,6 +50,7 @@ export const Home = () => {
   const [form, setForm] = useState<Form>(initValue)
   const [loading, setLoading] = useState({loading: false, error: null, msg: ''})
   const {setItem, setMyData} = useSecureStorage()
+  const connectionStatus = useNetInfo()
   const agent = useAgent()
 
   const handleChange = (name: string, value: string) => {
@@ -56,6 +58,13 @@ export const Home = () => {
   }
 
   const submit = () => {
+    if (!connectionStatus) {
+      Alert.alert(
+        'Error de conexión',
+        'Por favor, comprueba que tu conexión a internet sea estable',
+      )
+      return
+    }
     if (
       !form.name ||
       !form.phone ||

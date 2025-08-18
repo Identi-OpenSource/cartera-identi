@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -21,6 +22,7 @@ import {KEYS_MMKV} from '../../config/mmkv'
 import {MEDIATOR_DID_LAC, RECIPIENT_DID_URL} from '../../core/environments'
 import {receivedMessages, sendMessage} from '../../core/didcomm'
 import {v4 as uuidv4} from 'uuid'
+import useNetInfo from '../../hooks/useNetInfo'
 const opciones = {
   year: 'numeric',
   month: 'long',
@@ -34,9 +36,13 @@ const logo = require('../../assets/imgs/logo_identi.png')
 export const HomePrivate = () => {
   const [loading, setLoading] = useState({loading: false, error: null, msg: ''})
   const [listSolicitudes, setListSolicitudes] = useState<any[]>([])
+  const [listSolicitudesPending, setListSolicitudesPending] = useState<any[]>(
+    [],
+  )
   const {myData, getItem, setItem} = useSecureStorage()
   const agent = useAgent()
   const isFocused = useIsFocused()
+  const connectionStatus = useNetInfo()
   const navigation = useNavigation<any>()
 
   const emitAllCV = async () => {
@@ -80,6 +86,45 @@ export const HomePrivate = () => {
 
   const getMessages = async () => {
     try {
+      if (!connectionStatus) {
+        Alert.alert(
+          'Error de conexión',
+          'Por favor, comprueba que tu conexión a internet sea estable',
+        )
+        return
+      }
+      if (listSolicitudesPending?.length > 0) {
+        for (let index = 0; index < listSolicitudesPending.length; index++) {
+          setLoading({
+            loading: true,
+            error: null,
+            msg: `Enviando solicitud ${index + 1}, por favor espere...`,
+          })
+          const body = listSolicitudesPending[index]
+          await sendMessage(agent, myData.did, RECIPIENT_DID_URL, body)
+            .then(() => {
+              const listSol =
+                JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string) || []
+              listSol.push(body)
+              setItem(KEYS_MMKV.listSolicitudes, JSON.stringify(listSol))
+              // eliminamos la solicitud de la lista pendiente
+              const listPending =
+                JSON.parse(
+                  getItem(KEYS_MMKV.listSolicitudesPending) as string,
+                ) || []
+              listPending.splice(index, 1)
+              setItem(
+                KEYS_MMKV.listSolicitudesPending,
+                JSON.stringify(listPending),
+              )
+            })
+            .catch(err => {
+              console.log('Error al enviar solicitud:', err)
+            })
+        }
+      }
+      init()
+
       setLoading({
         loading: true,
         error: null,
@@ -108,6 +153,15 @@ export const HomePrivate = () => {
       )
     })
     setListSolicitudes(solicitudes || [])
+    const solicitudesPending =
+      JSON.parse(getItem(KEYS_MMKV.listSolicitudesPending) as string) || []
+    solicitudesPending?.sort((a: any, b: any) => {
+      return (
+        new Date(b?.data?.createdAt).getTime() -
+        new Date(a?.data?.createdAt).getTime()
+      )
+    })
+    setListSolicitudesPending(solicitudesPending || [])
   }
 
   const status: any = (s: any) => {
@@ -172,6 +226,16 @@ export const HomePrivate = () => {
         </View>
       </View>
       <ScrollView>
+        {listSolicitudesPending?.length > 0 && (
+          <View style={styles.bodyListPending}>
+            <Text style={styles.titleSection}>
+              {
+                'Hay solicitudes pendientes de enviar, por favor, compruebe su conexión a internet y presione el botón actualizar.'
+              }
+            </Text>
+          </View>
+        )}
+
         {listSolicitudes?.length > 0 && (
           <View style={styles.bodyList}>
             {listSolicitudes?.map((solicitud: any, index: number) => {
@@ -209,6 +273,17 @@ export const HomePrivate = () => {
 }
 
 const styles = StyleSheet.create({
+  bodyListPending: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.primary,
+    paddingBottom: 20,
+  },
+  titleSection: {
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    fontSize: 16,
+    color: colors.text,
+  },
   bodyBtn: {
     width: '48%',
   },
