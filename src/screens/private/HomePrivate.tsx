@@ -19,7 +19,7 @@ import {useAgent} from '../../context/AgentContext'
 import {BtnPrimary} from '../../components/BtnPrimary'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {KEYS_MMKV} from '../../config/mmkv'
-import {MEDIATOR_DID_LAC, RECIPIENT_DID_URL} from '../../core/environments'
+import {LACCHAIN_MEDIATOR, RECIPIENT_DID_ETHER} from '../../core/environments'
 import {receivedMessages, sendMessage} from '../../core/didcomm'
 import {v4 as uuidv4} from 'uuid'
 import useNetInfo from '../../hooks/useNetInfo'
@@ -72,7 +72,7 @@ export const HomePrivate = () => {
         error: null,
         msg: 'Sincronizando, por favor espere...',
       })
-      await sendMessage(agent, myData.did, RECIPIENT_DID_URL, body)
+      await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
       setItem(KEYS_MMKV.sendCvIdentity, 'true')
       setLoading({
         loading: false,
@@ -101,7 +101,7 @@ export const HomePrivate = () => {
             msg: `Enviando solicitud ${index + 1}, por favor espere...`,
           })
           const body = listSolicitudesPending[index]
-          await sendMessage(agent, myData.did, RECIPIENT_DID_URL, body)
+          await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
             .then(() => {
               const listSol =
                 JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string) || []
@@ -130,7 +130,7 @@ export const HomePrivate = () => {
         error: null,
         msg: 'Sincronizando, por favor espere...',
       })
-      await receivedMessages(agent, myData?.did, MEDIATOR_DID_LAC)
+      await receivedMessages(agent, myData?.did, LACCHAIN_MEDIATOR)
     } catch (error) {
       console.log('Error en getMessages:', error)
     } finally {

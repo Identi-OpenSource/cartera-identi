@@ -18,11 +18,7 @@ import {KEYS_MMKV} from '../../config/mmkv'
 import {InpText} from '../../components/InpText'
 import {v4 as uuidv4} from 'uuid'
 import {TYPE_CREDENTIAL, TYPE_MESSAGE} from '../../utils/functionCV'
-import {
-  DID_PACK,
-  RECIPIENT_DID_URL,
-  SEND_MESSAGE_TYPE,
-} from '../../core/environments'
+import {RECIPIENT_DID_ETHER} from '../../core/environments'
 import {useNavigation} from '@react-navigation/native'
 import {createPV, sendMessage} from '../../core/didcomm'
 import useNetInfo from '../../hooks/useNetInfo'
@@ -182,7 +178,7 @@ export const RequestCredit = () => {
         error: null,
         msg: 'Enviando solicitud',
       })
-      await sendMessage(agent, myData.did, RECIPIENT_DID_URL, body)
+      await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
         .then(() => {
           const listSolicitudes =
             JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string) || []

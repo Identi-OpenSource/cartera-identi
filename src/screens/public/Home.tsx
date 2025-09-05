@@ -21,9 +21,12 @@ import {
   connectToDIDComm,
   ensureMediationGranted,
 } from '../../core/didcomm'
-import {MEDIATOR_DID_LAC} from '../../core/environments'
 import {useAgent} from '../../context/AgentContext'
 import useNetInfo from '../../hooks/useNetInfo'
+import {
+  LACCHAIN_MEDIATOR,
+  PROVIDER_LAC_OPENPROTEST,
+} from '../../core/environments'
 
 interface Form {
   name: string
@@ -33,11 +36,11 @@ interface Form {
   country: string
 }
 const initValue: Form = {
-  name: '',
-  lastName: '',
-  dni: '',
-  phone: '',
-  country: '',
+  name: 'Braudin',
+  lastName: 'Laya',
+  dni: '12345678',
+  phone: '1234567890',
+  country: 'Perú',
 }
 
 const countryList = [
@@ -75,10 +78,12 @@ export const Home = () => {
       Alert.alert('Error de validación', 'Por favor, rellena todos los campos')
       return
     }
+
     if (!form.dni.match(/^\d{7,9}$/)) {
       Alert.alert('Error de validación', 'Debes ingresar un DNI valido')
       return
     }
+
     if (!form.phone.match(/^\d{7,11}$/)) {
       Alert.alert(
         'Error de validación',
@@ -86,6 +91,7 @@ export const Home = () => {
       )
       return
     }
+
     if (form.name.length < 3 || form.lastName.length < 3) {
       Alert.alert('Error de validación', 'Debes ingresar un nombre valido')
       return
@@ -101,56 +107,68 @@ export const Home = () => {
         error: null,
         msg: `Hola ${form.name}, Vamos a generar tu identidad digital`,
       })
-      // esperar 2 segundos para que el usuario pueda ver el mensaje
+
       await new Promise(resolve => setTimeout(resolve, 2000))
 
-      const _id = await agent.didManagerCreate({
-        provider: 'did:ethr:lacchain',
-      })
+      let _id
+      try {
+        _id = await agent.didManagerCreate({
+          provider: PROVIDER_LAC_OPENPROTEST,
+          options: {ttl: 60 * 60 * 24 * 365 * 100},
+        })
+      } catch (error) {
+        console.log(error)
+      }
+      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      await addDIDCommService(agent, _id.did, LACCHAIN_MEDIATOR)
       setLoading({
         loading: true,
         error: null,
         msg: 'Registrando identidad al servicio',
       })
-      await addDIDCommService(agent, _id.did, MEDIATOR_DID_LAC)
+
+      await new Promise(resolve => setTimeout(resolve, 3000))
       await addDIDCommKey(agent, _id.did)
       setLoading({
         loading: true,
         error: null,
         msg: 'Iniciando proceso de comunicación ',
       })
-      await connectToDIDComm(agent, _id.did, MEDIATOR_DID_LAC)
+
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      await connectToDIDComm(agent, _id.did, LACCHAIN_MEDIATOR)
       setLoading({
         loading: true,
         error: null,
         msg: 'Verificando comunicación',
       })
-      await ensureMediationGranted(agent, _id.did, MEDIATOR_DID_LAC)
 
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      await ensureMediationGranted(agent, _id.did, LACCHAIN_MEDIATOR)
       setLoading({
         loading: true,
         error: null,
         msg: 'Tu identidad digital se ha creado correctamente.',
       })
-      setTimeout(() => {
-        const DATA = {...form, did: _id.did}
 
-        setItem(KEYS_MMKV.MY_DATA_USER, JSON.stringify(DATA))
-        setMyData(DATA)
-      }, 2000)
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      const DATA = {...form, did: _id.did}
+      setItem(KEYS_MMKV.MY_DATA_USER, JSON.stringify(DATA))
+      setMyData(DATA)
     } catch (error) {
       setLoading({
         loading: true,
         error: null,
         msg: 'Error al crear tu identidad, intenta de nuevo',
       })
-      setTimeout(() => {
-        setLoading({
-          loading: false,
-          error: null,
-          msg: '',
-        })
-      }, 5000)
+
+      await new Promise(resolve => setTimeout(resolve, 5000))
+      setLoading({
+        loading: false,
+        error: null,
+        msg: '',
+      })
     }
   }
 

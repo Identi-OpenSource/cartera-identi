@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "module": "esnext"
-  },
-  "compilerOptions": {
-    "module": "esnext"
-  },
-  "compilerOptions": {
-    "module": "esnext"
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
   },
   "extends": "@react-native/typescript-config/tsconfig.json"
 }

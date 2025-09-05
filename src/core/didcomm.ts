@@ -11,9 +11,9 @@ import {
 } from '@veramo/did-comm'
 import {v4 as uuidv4} from 'uuid'
 import {
-  DID_KMS,
   DID_PACK,
   KEY_TO_DID_DOC,
+  KMS_LOCAL_KEY,
   MESSAGES_RECEIVED_MESSAGE_TYPE,
   SEND_MESSAGE_TYPE,
 } from './environments'
@@ -44,11 +44,12 @@ const addDIDCommService = async (
       },
       options: {
         // signOnly: true,
-        ttl: 60 * 60 * 24 * 365 * 100,
+        // ttl: 60 * 60 * 24 * 365 * 100,
       },
     })
   } catch (error) {
     console.log('Error:', error)
+    throw error
   }
   return true
 }
@@ -59,7 +60,7 @@ const addDIDCommKey = async (
 ): Promise<boolean> => {
   const result_key = await agent.keyManagerCreate({
     type: KEY_TO_DID_DOC,
-    kms: DID_KMS,
+    kms: KMS_LOCAL_KEY,
   })
 
   await agent.didManagerAddKey({
@@ -80,56 +81,47 @@ const connectToDIDComm = async (
   mediatorDID: string,
 ) => {
   try {
-    // Create mediate request
     const mediateRequestMessage = createV3MediateRequestMessage(
       recipientDID,
       mediatorDID,
     )
-
     const packedMessage = await agent?.packDIDCommMessage({
       packing: DID_PACK,
       message: mediateRequestMessage,
     })
-
     await agent?.sendDIDCommMessage({
       messageId: mediateRequestMessage.id,
       packedMessage,
       recipientDidUrl: mediatorDID,
     })
-
-    // Update mediate request
     const update = createV3RecipientUpdateMessage(recipientDID, mediatorDID, [
       {
         recipient_did: recipientDID,
         action: UpdateAction.ADD,
       },
     ])
-
     const packedUpdate = await agent?.packDIDCommMessage({
       packing: DID_PACK,
       message: update,
     })
-
     await agent?.sendDIDCommMessage({
       packedMessage: packedUpdate,
       recipientDidUrl: mediatorDID,
       messageId: update.id,
     })
-
     const query = createV3RecipientQueryMessage(recipientDID, mediatorDID)
-
     const packedQuery = await agent?.packDIDCommMessage({
       packing: DID_PACK,
       message: query,
     })
-
     await agent?.sendDIDCommMessage({
       packedMessage: packedQuery,
       recipientDidUrl: mediatorDID,
       messageId: query.id,
     })
   } catch (err) {
-    console.log(err)
+    console.log('connectToDIDComm => ', err)
+    throw err
   }
 }
 
