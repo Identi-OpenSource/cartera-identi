@@ -26,6 +26,7 @@ import {
   DataStoreORM,
   DataStore,
 } from '@veramo/data-store'
+import {CredentialPlugin} from '@veramo/credential-w3c'
 import {
   EthrLacDIDProvider,
   LacDIDProvider,
@@ -135,6 +136,7 @@ export const agentIns = (DB_ENCRYPTION_KEY: string) => {
           ],
         }),
       }),
+      new CredentialPlugin(),
       new DIDComm(),
       new MessageHandler({
         messageHandlers: [new DIDCommMessageHandler()],

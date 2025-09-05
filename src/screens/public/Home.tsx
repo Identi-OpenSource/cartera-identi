@@ -36,11 +36,11 @@ interface Form {
   country: string
 }
 const initValue: Form = {
-  name: 'Braudin',
-  lastName: 'Laya',
-  dni: '12345678',
-  phone: '1234567890',
-  country: 'Perú',
+  name: '',
+  lastName: '',
+  dni: '',
+  phone: '',
+  country: '',
 }
 
 const countryList = [
