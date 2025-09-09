@@ -242,7 +242,6 @@ const receivedMessages = async (
     }
 
     if (msg?.data?.type === TYPE_MESSAGE.SHARED_PRESENTATION_VERIFIABLE) {
-      console.log('SHARED_PRESENTATION_VERIFIABLE', msg)
       await agent?.dataStoreSaveVerifiablePresentation({
         verifiablePresentation: msg?.data?.verifiablePresentation,
       })
@@ -281,29 +280,30 @@ const createPV = async (
   agent: TAgent<ISetupAgent>,
   didEmitter: string,
   did: string,
-  hash,
+  hash: string[],
 ) => {
   const id = uuidv4()
-  const credentialIdentidad: any =
-    await agent.dataStoreORMGetVerifiableCredentials({
-      where: [
-        {
-          column: 'hash',
-          value: [...hash],
-          not: false,
-          op: 'In',
-        },
-      ],
-    })
+  const credentials: any = await agent.dataStoreORMGetVerifiableCredentials({
+    where: [
+      {
+        column: 'hash',
+        value: [...hash],
+        not: false,
+        op: 'In',
+      },
+    ],
+  })
 
-  if (credentialIdentidad.length === 0) {
+  if (credentials.length === 0) {
     return null
   }
-  const credential = credentialIdentidad[0]?.verifiableCredential
+  const credential = credentials.map(
+    (credencial: any) => credencial.verifiableCredential,
+  )
   const newPV = await agent?.createVerifiablePresentation({
     presentation: {
       holder: didEmitter,
-      verifiableCredential: [credential],
+      verifiableCredential: [...credential],
       verifier: [did],
       type: ['VerifiablePresentation', 'Presentación verificable'],
       '@context': ['https://www.w3.org/2018/credentials/v1'],
