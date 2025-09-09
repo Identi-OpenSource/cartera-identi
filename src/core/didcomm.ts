@@ -241,45 +241,11 @@ const receivedMessages = async (
       })
     }
 
-    if (msg?.data?.type === TYPE_MESSAGE.SERVICE_RESPONSE) {
-      const storage = await getSecureStorage()
-      const solicitudesDB = storage?.getString(KEYS_MMKV?.listSolicitudes)
-      const solicitudes = solicitudesDB ? JSON.parse(solicitudesDB) : []
-      const soloSolicitudIndex = solicitudes.findIndex(
-        (sol: any) => sol?.data?.id === msg?.data?.service_id,
-      )
-
-      if (soloSolicitudIndex === -1) {
-        console.log('No se encontró la solicitud')
-        return
-      }
-
-      switch (msg?.data?.status) {
-        case SERVICES_STATUS.pending:
-          solicitudes[soloSolicitudIndex].data.status = 0
-          break
-        case SERVICES_STATUS.analyzed:
-          solicitudes[soloSolicitudIndex].data.status = 0
-          break
-        case SERVICES_STATUS.complete:
-          solicitudes[soloSolicitudIndex].data.status = 1
-          break
-        case SERVICES_STATUS.rejected:
-          solicitudes[soloSolicitudIndex].data.status = 2
-          break
-        case SERVICES_STATUS.canceled:
-          solicitudes[soloSolicitudIndex].data.status = 2
-          break
-        default:
-          solicitudes[soloSolicitudIndex].data.status = 0
-          break
-      }
-
-      solicitudes[soloSolicitudIndex].data.order_number =
-        msg?.data?.order_number
-      solicitudes[soloSolicitudIndex].data.reason = msg?.data?.reason
-
-      storage?.set(KEYS_MMKV.listSolicitudes, JSON.stringify(solicitudes))
+    if (msg?.data?.type === TYPE_MESSAGE.SHARED_PRESENTATION_VERIFIABLE) {
+      console.log('SHARED_PRESENTATION_VERIFIABLE', msg)
+      await agent?.dataStoreSaveVerifiablePresentation({
+        verifiablePresentation: msg?.data?.verifiablePresentation,
+      })
     }
   }
 }
@@ -311,16 +277,21 @@ const sendMessage = async (
   })
 }
 
-const createPV = async (agent: TAgent<ISetupAgent>, did: string) => {
+const createPV = async (
+  agent: TAgent<ISetupAgent>,
+  didEmitter: string,
+  did: string,
+  hash,
+) => {
   const id = uuidv4()
   const credentialIdentidad: any =
     await agent.dataStoreORMGetVerifiableCredentials({
       where: [
         {
-          column: 'type',
-          value: [`VerifiableCredential,${TYPE_CREDENTIAL?.IDENTITY?.title}`],
+          column: 'hash',
+          value: [...hash],
           not: false,
-          op: 'Equal',
+          op: 'In',
         },
       ],
     })
@@ -331,11 +302,15 @@ const createPV = async (agent: TAgent<ISetupAgent>, did: string) => {
   const credential = credentialIdentidad[0]?.verifiableCredential
   const newPV = await agent?.createVerifiablePresentation({
     presentation: {
-      holder: did,
+      holder: didEmitter,
       verifiableCredential: [credential],
-      type: ['VerifiablePresentation'],
+      verifier: [did],
+      type: ['VerifiablePresentation', 'Presentación verificable'],
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       issuanceDate: new Date().toISOString(),
+      expirationDate: new Date(
+        new Date().getTime() + 1000 * 60 * 60 * 24 * 365,
+      ).toISOString(),
       id,
     },
     proofFormat: 'jwt',

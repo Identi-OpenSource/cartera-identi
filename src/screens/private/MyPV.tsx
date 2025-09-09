@@ -24,7 +24,7 @@ const opciones = {
   hour12: true,
 } as any
 
-export const MyCV = () => {
+export const MyPV = () => {
   const {myData} = useSecureStorage()
   const [credenciales, setCredenciales] = useState<any[]>([])
   const navigation = useNavigation<any>()
@@ -32,24 +32,15 @@ export const MyCV = () => {
   const isFocused = useIsFocused()
 
   const getCredential = async () => {
-    let vcs = await agent.dataStoreORMGetVerifiableCredentials({
-      where: [
-        {
-          column: 'subject',
-          value: [myData?.did],
-          op: 'Equal',
-        },
-      ],
-    })
-    vcs = vcs?.filter((credencial: any) => {
+    let pvs = await agent.dataStoreORMGetVerifiablePresentations({})
+    pvs = pvs?.filter((credencial: any) => {
       const toDate = new Date()
       const fromDate = new Date(
-        credencial?.verifiableCredential?.expirationDate,
+        credencial?.verifiablePresentation?.expirationDate,
       )
       return toDate.getTime() < fromDate.getTime()
     })
-
-    setCredenciales(vcs)
+    setCredenciales(pvs)
   }
 
   useEffect(() => {
@@ -58,7 +49,7 @@ export const MyCV = () => {
 
   return (
     <View style={globalStyles.container}>
-      <Text style={styles.title}>{'Mis credenciales'}</Text>
+      <Text style={styles.title}>{'Credenciales Compartidas'}</Text>
       <TouchableHighlight
         onPress={() => Clipboard.setString(myData?.did)}
         activeOpacity={0.5}
@@ -76,9 +67,9 @@ export const MyCV = () => {
       <ScrollView style={[globalStyles.container, styles.dataContainer]}>
         {credenciales?.map((credencial: any, index: number) => {
           const issuanceDate = new Date(
-            credencial.verifiableCredential.issuanceDate,
+            credencial.verifiablePresentation.issuanceDate,
           ).toLocaleString('es-ES', opciones)
-          const type = credencial.verifiableCredential.type[1]
+          const holder = credencial.verifiablePresentation.holder
           return (
             <TouchableHighlight
               key={index}
@@ -90,7 +81,7 @@ export const MyCV = () => {
               activeOpacity={0.5}
               underlayColor={'transparent'}>
               <View style={styles.data}>
-                <Text style={styles.dataLabel}>{type}</Text>
+                <Text style={styles.dataLabel}>{formatDid(holder)}</Text>
                 <Text style={styles.dataValue}>{issuanceDate}</Text>
               </View>
             </TouchableHighlight>
@@ -106,7 +97,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   dataLabel: {
-    fontSize: 22,
+    fontSize: 18,
     color: colors.background,
     fontWeight: 'bold',
     lineHeight: 28,

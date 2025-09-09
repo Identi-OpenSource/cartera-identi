@@ -3,7 +3,7 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Home} from '../screens/public/Home'
 import {colors} from '../styles/styles'
 import {useSecureStorage} from '../context/SecureStorageContext'
@@ -11,13 +11,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {FontAwesome6} from '@react-native-vector-icons/fontawesome6'
 import {HomePrivate} from '../screens/private/HomePrivate'
 import {Profile} from '../screens/private/Profile'
-import {RequestCredit} from '../screens/private/RequestCredit'
+import {RequestCredentials} from '../screens/private/RequestCredentials'
 import {MyCV} from '../screens/private/MyCV'
 import {MyCVDetails} from '../screens/private/MyCVDetails'
 import {DetailsSol} from '../screens/private/DetailsSol'
-import {receivedMessages} from '../core/didcomm'
-import {useAgent} from '../context/AgentContext'
-import {MEDIATOR_DID_LAC} from '../core/environments'
+import {MyPV} from '../screens/private/MyPV'
+import {MyPVDetails} from '../screens/private/MyPVDetails'
 
 export const Router = () => {
   const {myData} = useSecureStorage()
@@ -54,6 +53,22 @@ const PrivateStack = () => {
         },
       }}>
       <Tabs.Screen
+        name="credenciales"
+        component={CvStack}
+        options={{
+          title: 'VC',
+          // unmountOnBlur: true,
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome6
+              name="shield"
+              iconStyle="solid"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="Home"
         component={HomeStack}
         options={{
@@ -70,14 +85,14 @@ const PrivateStack = () => {
         }}
       />
       <Tabs.Screen
-        name="credenciales"
-        component={CvStack}
+        name="presentaciones"
+        component={PvStack}
         options={{
-          title: 'VC',
+          title: 'PV',
           // unmountOnBlur: true,
           tabBarIcon: ({color, size}) => (
             <FontAwesome6
-              name="file-shield"
+              name="shield-halved"
               iconStyle="solid"
               color={color}
               size={size}
@@ -85,22 +100,6 @@ const PrivateStack = () => {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="Perfil"
-        component={ProfileStack}
-        options={{
-          title: 'Perfil',
-          unmountOnBlur: true,
-          tabBarIcon: ({color, size}) => (
-            <FontAwesome6
-              name="user"
-              iconStyle="solid"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      /> */}
     </Tabs.Navigator>
   )
 }
@@ -120,31 +119,13 @@ const HomeStack = () => {
         options={options}
       />
       <StackPrivate.Screen
-        name="RequestCredit"
-        component={RequestCredit}
+        name="RequestCredentials"
+        component={RequestCredentials}
         options={options}
       />
       <StackPrivate.Screen
         name="DetailsSol"
         component={DetailsSol}
-        options={options}
-      />
-    </StackPrivate.Navigator>
-  )
-}
-
-const ProfileStack = () => {
-  const StackPrivate = createNativeStackNavigator()
-  const options = {
-    headerShown: false,
-    statusBarStyle: 'light',
-    statusBarColor: colors.primary,
-  } as NativeStackNavigationOptions
-  return (
-    <StackPrivate.Navigator initialRouteName={'HomeScreen'}>
-      <StackPrivate.Screen
-        name="Profile"
-        component={Profile}
         options={options}
       />
     </StackPrivate.Navigator>
@@ -164,6 +145,25 @@ const CvStack = () => {
       <StackPrivate.Screen
         name="MyCVDetails"
         component={MyCVDetails}
+        options={options}
+      />
+    </StackPrivate.Navigator>
+  )
+}
+
+const PvStack = () => {
+  const StackPrivate = createNativeStackNavigator()
+  const options = {
+    headerShown: false,
+    statusBarStyle: 'light',
+    statusBarColor: colors.primary,
+  } as NativeStackNavigationOptions
+  return (
+    <StackPrivate.Navigator initialRouteName={'HomeScreen'}>
+      <StackPrivate.Screen name="MyPV" component={MyPV} options={options} />
+      <StackPrivate.Screen
+        name="MyCVDetails"
+        component={MyPVDetails}
         options={options}
       />
     </StackPrivate.Navigator>

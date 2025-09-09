@@ -50,29 +50,35 @@ export const HomePrivate = () => {
     if (myCVI === 'true') {
       return
     }
-    const idSolicitud = uuidv4()
-    const body = {
-      type: TYPE_MESSAGE.REQUEST_VERIFIABLE_CREDENTIAL,
-      holder: myData.did,
-      data: {
-        id: idSolicitud,
-        requestId: idSolicitud,
-        serviceName: TYPE_CREDENTIAL.IDENTITY.name,
-        'Servicio a solicitar': TYPE_CREDENTIAL.IDENTITY.title,
-        Nombres: myData.name,
-        Apellidos: myData.lastName,
-        DNI: myData.dni,
-        Celular: myData.phone,
-        País: myData.country,
-      },
-    }
     try {
       setLoading({
         loading: true,
         error: null,
         msg: 'Sincronizando, por favor espere...',
       })
-      await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
+      // await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
+      agent.createVerifiableCredential({
+        credential: {
+          '@context': ['https://www.w3.org/2018/credentials/v1'],
+          type: ['VerifiableCredential', 'Credencial de Identidad'],
+          id: uuidv4(),
+          issuer: myData.did,
+          issuanceDate: new Date().toISOString(),
+          expirationDate: new Date(
+            new Date().getTime() + 1000 * 60 * 60 * 24 * 365,
+          ).toISOString(),
+          credentialSubject: {
+            id: myData.did,
+            Nombres: myData.name,
+            Apellidos: myData.lastName,
+            DNI: myData.dni,
+            Celular: myData.phone,
+            País: myData.country,
+          },
+        },
+        proofFormat: 'jwt',
+        save: true,
+      })
       setItem(KEYS_MMKV.sendCvIdentity, 'true')
       setLoading({
         loading: false,
@@ -93,42 +99,12 @@ export const HomePrivate = () => {
         )
         return
       }
-      if (listSolicitudesPending?.length > 0) {
-        for (let index = 0; index < listSolicitudesPending.length; index++) {
-          setLoading({
-            loading: true,
-            error: null,
-            msg: `Enviando solicitud ${index + 1}, por favor espere...`,
-          })
-          const body = listSolicitudesPending[index]
-          await sendMessage(agent, myData.did, RECIPIENT_DID_ETHER, body)
-            .then(() => {
-              const listSol =
-                JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string) || []
-              listSol.push(body)
-              setItem(KEYS_MMKV.listSolicitudes, JSON.stringify(listSol))
-              // eliminamos la solicitud de la lista pendiente
-              const listPending =
-                JSON.parse(
-                  getItem(KEYS_MMKV.listSolicitudesPending) as string,
-                ) || []
-              listPending.splice(index, 1)
-              setItem(
-                KEYS_MMKV.listSolicitudesPending,
-                JSON.stringify(listPending),
-              )
-            })
-            .catch(err => {
-              console.log('Error al enviar solicitud:', err)
-            })
-        }
-      }
       init()
 
       setLoading({
         loading: true,
         error: null,
-        msg: 'Sincronizando, por favor espere...',
+        msg: 'Leyendo mensajes, por favor espere...',
       })
       await receivedMessages(agent, myData?.did, LACCHAIN_MEDIATOR)
     } catch (error) {
@@ -145,23 +121,6 @@ export const HomePrivate = () => {
 
   const init = async () => {
     await emitAllCV()
-    const solicitudes = JSON.parse(getItem(KEYS_MMKV.listSolicitudes) as string)
-    solicitudes?.sort((a: any, b: any) => {
-      return (
-        new Date(b?.data?.createdAt).getTime() -
-        new Date(a?.data?.createdAt).getTime()
-      )
-    })
-    setListSolicitudes(solicitudes || [])
-    const solicitudesPending =
-      JSON.parse(getItem(KEYS_MMKV.listSolicitudesPending) as string) || []
-    solicitudesPending?.sort((a: any, b: any) => {
-      return (
-        new Date(b?.data?.createdAt).getTime() -
-        new Date(a?.data?.createdAt).getTime()
-      )
-    })
-    setListSolicitudesPending(solicitudesPending || [])
   }
 
   const status: any = (s: any) => {
@@ -210,32 +169,18 @@ export const HomePrivate = () => {
           }>{`${myData?.country} | DNI: ${myData?.dni} | Tel: ${myData?.phone}`}</Text>
       </View>
       <View style={styles.body}>
-        <View style={styles.bodyBtn}>
-          <BtnPrimary
-            disabled={loading?.loading}
-            title="Actualizar"
-            onPress={() => getMessages()}
-          />
-        </View>
-        <View style={styles.bodyBtn}>
-          <BtnPrimary
-            disabled={loading?.loading}
-            title="Solicitar crédito"
-            onPress={() => navigation.navigate('RequestCredit' as never)}
-          />
-        </View>
+        <BtnPrimary
+          disabled={loading?.loading}
+          title="Obtener Mensajes"
+          onPress={() => getMessages()}
+        />
+        <BtnPrimary
+          disabled={loading?.loading}
+          title="Compartir mis credenciales"
+          onPress={() => navigation.navigate('RequestCredentials' as never)}
+        />
       </View>
       <ScrollView>
-        {listSolicitudesPending?.length > 0 && (
-          <View style={styles.bodyListPending}>
-            <Text style={styles.titleSection}>
-              {
-                'Hay solicitudes pendientes de enviar, por favor, compruebe su conexión a internet y presione el botón actualizar.'
-              }
-            </Text>
-          </View>
-        )}
-
         {listSolicitudes?.length > 0 && (
           <View style={styles.bodyList}>
             {listSolicitudes?.map((solicitud: any, index: number) => {
@@ -284,9 +229,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
   },
-  bodyBtn: {
-    width: '48%',
-  },
+  bodyBtn: {},
   loadingText: {
     paddingLeft: 10,
     fontSize: 14,
@@ -303,9 +246,6 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 20,
     paddingBottom: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   bodyList: {
     paddingHorizontal: 20,

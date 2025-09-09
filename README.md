@@ -5,93 +5,114 @@
 </p>
 
 <p align="center">
-  Cartera Identi es una billetera digital universal e interoperable para la gestión de Identificadores Descentralizados (DID) en un contexto de solicitudes de servicios. Basada en tecnología blockchain y estándares abiertos de identidad descentralizada, permite la autogestión de datos e interacciones seguras y eficientes entre usuarios y entidades proveedoras de servicios a través de infraestructura digital confiable.
+Identi Wallet is a universal and interoperable digital wallet for managing Decentralized Identifiers (DID) in a service request context. Based on blockchain technology and open decentralized identity standards, it enables secure, efficient interactions between users and service providers through a reliable digital infrastructure, allowing for true data self-management.
 </p>
 
-## Funcionalidades principales
+---
 
-<p>Las funcionalidades de la aplicación simulan un flujo de trabajo típico de gestión de identidad y crédito, utilizando DID.</p>
+## Key Features
 
-- **Credencial de Identidad**: La primera vez que el usuario accede a la app, se crea una credencial de identidad digital. Esta credencial, que no está vinculada a una entidad central, es el pilar de la identidad del usuario y es necesaria para acceder a los demás servicios de la cartera.
+<p>The application's features simulate a typical identity and credit management workflow using DIDs.</p>
 
-- **Solicitud de Crédito**: El usuario, con credencial de identidad aprobada, puede solicitar créditos a un “entidad financiera” simulada. La aplicación no solo envía los datos necesarios, sino que también gestiona las credenciales verificables asociadas, demostrando a la entidad financiera cómo se realizó la verificación de la identidad del usuario de forma segura.
+- **Identity Credential**: When a user first accesses the app, a digital identity credential is created. This credential, which is not tied to a central authority, is the cornerstone of the user's identity and is essential for accessing the other services in the portfolio.
 
-- **Visualizar Solicitud**: El usuario puede revisar el estado de sus solicitudes simuladas, lo que permite observar cómo se gestionaría la comunicación asincrónica de verificaciones o aprobaciones en un sistema real basado en DID.
+- **View Credentials**: The application functions as a "wallet" for credentials, enabling users to view all the credentials they have issued and received.
 
-- **Visualizar Credenciales**: La aplicación actúa como una “cartera” de credenciales, permitiendo al usuario ver todas las credenciales que ha emitido y recibido.
+- **Sharing Credentials**: This feature allows users to share credentials in a verifiable presentation format with other DIDs.
 
-## Requerimientos
+---
 
-- Java Development Kit (JDK) versión 17+
-- Node.js versión 20+
+## Requirements
+
+- Java Development Kit (JDK) version 17+
+- Node.js version 20+
 - React Native CLI
-- Archivo .env (solicítalo)
+- .env file (available upon request)
 
-#### Compatibilidad
+#### Compatibility
 
-**Cartera Identi** está diseñada para funcionar en dispositivos Android con API level 29 y superiores.
+**Identi Wallet**: Designed to run on Android devices with API level 29 and above.
 
-## Instalación
+---
 
-1. Asegúrate de tener React Native instalado en tu sistema. Si aún no lo tienes, sigue las instrucciones en [Instalación de React Native](https://reactnative.dev/docs/environment-setup).
+## Installation
 
-2. Clonar este repositorio:
+1.  Make sure you have React Native installed on your system. If not, follow the instructions at [React Native Installation](https://reactnative.dev/docs/environment-setup).
+
+2.  Clone this repository:
+
+<!-- end list -->
 
 ```
 git clone https://github.com/Identi-OpenSource/cartera-identi.git
 ```
 
-3. Instalación de los paquetes de npm:
+3.  Install the npm packages:
+
+<!-- end list -->
 
 ```
 npm install --legacy-peer-deps
 ```
 
-4. Iniciación del proyecto
+4.  Start the project:
+
+<!-- end list -->
 
 ```
 npm start -- --reset-cache
 ```
 
-## ⚠️ Posibles problemas
+---
 
-Esta aplicación integra librerías criptográficas avanzadas y funcionalidades de Node.js, lo que puede generar algunos desafíos de compatibilidad durante la instalación. Los errores suelen depender del entorno de trabajo y la versión de Node.js que estés utilizando.
+## ⚠️ Potential Issues
 
-Para solucionar estos problemas, te recomendamos lo siguiente:
+This application integrates advanced cryptographic libraries and Node.js functionalities, which may cause some compatibility issues during installation. Errors typically depend on your working environment and the specific Node.js version you are using.
 
-- Revisa la documentación de las librerías específicas que están causando el conflicto.
-- Consulta la documentación oficial de Node.js para obtener información sobre compatibilidad.
-- Si el problema persiste, no dudes en crear una incidencia en este repositorio para que podamos resolverlo juntos con la ayuda de la comunidad.
+To resolve these issues, we recommend the following:
 
-## Contribución
+- Review the documentation for the specific libraries that are causing the conflict.
+- Consult the official Node.js documentation for compatibility information.
+- If the problem persists, please create an issue in this repository so we can work on a solution together with the community's help.
 
-Estamos encantados de recibir contribuciones de la comunidad para mejorar **Billetera Identi**. Si estás interesado en contribuir, aquí te mostramos algunas maneras en las que puedes hacerlo:
+---
 
-- **Sugerir una característica**: Si tienes una idea para una nueva funcionalidad que podría mejorar la aplicación, abre un issue en el repositorio para discutir tu sugerencia.
+## Contribution
 
-      Para contribuir, sigue estos pasos:
+We are thrilled to receive contributions from the community to improve **Identi Wallet**. If you are interested in contributing, here are a few ways you can help:
 
-      1. Haz un "fork" de este repositorio.
-      2. Crea una nueva rama para tu función o corrección (`git checkout -b feature/nueva-funcion`).
-      3. Realiza tus cambios y realiza commits descriptivos (`git commit -m 'Agrega nueva función'`).
-      4. Envía tus cambios al repositorio forkeado (`git push origin feature/nueva-funcion`).
-      5. Abre un Pull Request en este repositorio desde tu rama forkeada.
+- **Suggest a Feature**: If you have an idea for a new feature that could enhance the application, open an issue in the repository to discuss your suggestion.
 
-      Revisaremos tu contribución lo antes posible
-      ¡Esperamos tus sugerencias y mejoras!
+To contribute, follow these steps:
 
-- **Implementación de correcciones de errores y mejoras**: Si deseas corregir un error o implementar una mejora, primero revisa los issues abiertos para ver si alguien más ya está trabajando en ello. Si no es así, crea un issue para anunciar tu intención de trabajar en la corrección o mejora y luego envía un pull request cuando hayas terminado, para contribuir a la mejora del proyecto sigue los pasos del punto anterior.
+1.  Fork this repository.
 
-- **Informar errores**: Si encuentras un error o problema en la aplicación, por favor, repórtalo a través del [sistema de issues](https://github.com/Identi-OpenSource/micacao-wallet/issues). Asegúrate de proporcionar detalles sobre el problema, cómo reproducirlo y cualquier información adicional que pueda ser útil para corregirlo.
+2.  Create a new branch for your feature or bug fix. (`git checkout -b feature/new-feature`).
 
-- **Respondiendo a los problemas**: Ayuda a la comunidad respondiendo a los problemas abiertos en el repositorio. Si tienes experiencia en la solución de problemas específicos, tus sugerencias y soluciones serán muy apreciadas.
+3.  Make your changes and commit them with descriptive comments. (`git commit -m 'Add new feature'`).
 
-¡Gracias por tu interés en contribuir a **Billetera Identi**! Tu ayuda es invaluable para mejorar la herramienta.
+4.  Push your changes to your forked repository. (`git push origin feature/new-feature`).
 
-## Licencia
+5.  Open a Pull Request in this repository from your forked branch.
 
-Este proyecto está licenciado bajo la Licencia Apache-2.0. Consulta el archivo [LICENSE](./LICENSE) para obtener detalles completos.
+    We will review your contribution as soon as possible. We look forward to your suggestions and improvements\!
 
-## Aviso de Licencia MIT
+<!-- end list -->
 
-El software está proporcionado "tal cual", sin ninguna garantía de ningún tipo. Los autores no son responsables de ningún daño que pueda surgir del uso del software.
+- **Implement Bug Fixes and Improvements**: If you want to correct a bug or implement an improvement, first check the open issues to see if someone else is already working on it. If not, create a new issue to announce your intention to work on the fix or improvement, then submit a pull request once you are finished. To contribute, follow the same steps as above.
+
+- **Report Bugs**: If you find a bug or problem in the application, please report it through the [issue system](https://github.com/Identi-OpenSource/micacao-wallet/issues). Be sure to provide details about the problem, how to reproduce it, and any other information that might be helpful in fixing it.
+
+- **Respond to Issues**: Help the community by responding to open issues in the repository. If you have experience solving specific problems, your suggestions and solutions will be greatly appreciated.
+
+Thank you for your interest in contributing to **Identi Wallet\!** Your help is invaluable in improving this tool.
+
+---
+
+## License
+
+This project is licensed under the Apache License, Version 2.0. See the [LICENSE](https://www.google.com/search?q=./LICENSE) file for full details.
+
+## MIT License Notice
+
+The software is provided "as is," without warranty of any kind. The authors are not liable for any damages that may arise from the use of the software.
