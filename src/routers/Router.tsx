@@ -53,22 +53,6 @@ const PrivateStack = () => {
         },
       }}>
       <Tabs.Screen
-        name="credenciales"
-        component={CvStack}
-        options={{
-          title: 'VC',
-          // unmountOnBlur: true,
-          tabBarIcon: ({color, size}) => (
-            <FontAwesome6
-              name="shield"
-              iconStyle="solid"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="Home"
         component={HomeStack}
         options={{
@@ -77,6 +61,22 @@ const PrivateStack = () => {
           tabBarIcon: ({color, size}) => (
             <FontAwesome6
               name="house"
+              iconStyle="solid"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="credenciales"
+        component={CvStack}
+        options={{
+          title: 'VC',
+          // unmountOnBlur: true,
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome6
+              name="shield"
               iconStyle="solid"
               color={color}
               size={size}
