@@ -10,6 +10,8 @@ Identi Wallet is a universal and interoperable digital wallet for managing Decen
 
 ---
 
+<Image src="./src/assets/imgs/pantallas.png" width="100%" />
+
 ## Key Features
 
 <p>The application's features simulate a typical identity and credit management workflow using DIDs.</p>
